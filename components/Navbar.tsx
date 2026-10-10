@@ -88,10 +88,11 @@ export default function Navbar() {
           </div>
 
           {/* Center: Clean Text Navigation */}
-          <nav className="hidden lg:flex items-center justify-center gap-2 flex-1">
+          <nav className="hidden lg:flex items-center justify-center gap-1.5 flex-1">
             {[
               { name: "Home", href: "/" },
               { name: "Shop", href: "/products" },
+              { name: "Bulk Orders", href: "/bulk", badge: "B2B" },
               { name: "About Us", href: "/about" },
               { name: "Contact", href: "/contact" },
             ].map((link) => {
@@ -100,28 +101,55 @@ export default function Navbar() {
                 <Link
                   key={link.name}
                   href={link.href}
-                  className={`text-[14px] font-bold transition-all px-4 py-2 rounded-full ${
+                  className={`text-[13px] font-bold transition-all px-3.5 py-2 rounded-full flex items-center gap-1.5 ${
                     isActive 
                       ? "bg-stone-100 text-[#FF5733]" 
-                      : "text-stone-900 hover:text-[#FF5733] hover:bg-stone-50"
+                      : "text-stone-800 hover:text-[#FF5733] hover:bg-stone-50"
                   }`}
                 >
-                  {link.name}
+                  <span>{link.name}</span>
+                  {link.badge && (
+                    <span className="px-1.5 py-0.2 rounded-full bg-[#FF5733] text-white text-[10px] font-extrabold uppercase tracking-wider">
+                      {link.badge}
+                    </span>
+                  )}
                 </Link>
               );
             })}
           </nav>
 
           {/* Right: Circular Icons */}
-          <div className="flex items-center justify-end gap-3 w-1/4">
+          <div className="flex items-center justify-end gap-2.5 w-1/4 relative">
             
             {/* Search Icon Circle */}
             <button
               onClick={() => setIsSearchFocused(!isSearchFocused)}
               className="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center text-stone-600 hover:bg-stone-200 transition-colors"
+              title="Search"
             >
               <Search className="w-4 h-4" />
             </button>
+
+            {/* User Account / Profile */}
+            <div className="relative">
+              {user ? (
+                <Link
+                  href="/profile"
+                  className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#FF5733] to-rose-400 text-white font-black text-xs flex items-center justify-center shadow-sm hover:scale-105 transition-all"
+                  title={`Account: ${user.full_name || user.email}`}
+                >
+                  {user.full_name?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase() || "U"}
+                </Link>
+              ) : (
+                <Link
+                  href="/auth"
+                  className="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center text-stone-600 hover:bg-stone-200 hover:text-[#FF5733] transition-colors"
+                  title="Sign In / Register"
+                >
+                  <User className="w-4 h-4" />
+                </Link>
+              )}
+            </div>
 
             {/* Cart Icon Circle */}
             <button
@@ -141,7 +169,7 @@ export default function Navbar() {
             {isSearchFocused && (
               <form
                 onSubmit={handleSearch}
-                className="absolute right-4 top-[90px] w-72 bg-white p-2 shadow-xl border border-stone-100 rounded-lg flex items-center animate-in fade-in slide-in-from-top-2"
+                className="absolute right-0 top-[60px] w-72 bg-white p-2 shadow-2xl border border-stone-200 rounded-2xl flex items-center animate-in fade-in slide-in-from-top-2 z-50"
               >
                 <input
                   type="text"
@@ -164,7 +192,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden bg-white border-t border-stone-100 p-4 space-y-4 shadow-lg absolute w-full">
+        <div className="lg:hidden bg-white border-t border-stone-100 p-4 space-y-4 shadow-xl absolute w-full left-0 z-50">
           <form onSubmit={handleSearch} className="relative">
             <input
               type="text"
@@ -176,20 +204,52 @@ export default function Navbar() {
             <Search className="w-4 h-4 text-stone-400 absolute left-4 top-1/2 -translate-y-1/2" />
           </form>
 
-          <div className="flex flex-col space-y-2 pt-2">
-            <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="px-4 py-3 text-sm font-bold text-stone-900 hover:bg-stone-50 rounded-lg">Home</Link>
-            <Link href="/products" onClick={() => setIsMobileMenuOpen(false)} className="px-4 py-3 text-sm font-bold text-stone-900 hover:bg-stone-50 rounded-lg">Shop</Link>
-            {navCategories.slice(1, 4).map((cat, idx) => (
-              <Link
-                key={idx}
-                href={cat.href}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="px-4 py-3 text-sm font-bold text-stone-900 hover:bg-stone-50 rounded-lg"
-              >
-                {cat.name}
-              </Link>
-            ))}
-            <Link href="#" onClick={() => setIsMobileMenuOpen(false)} className="px-4 py-3 text-sm font-bold text-stone-900 hover:bg-stone-50 rounded-lg">Contact</Link>
+          <div className="flex flex-col space-y-1 pt-1">
+            <Link
+              href="/"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="px-4 py-2.5 text-sm font-bold text-stone-900 hover:bg-stone-50 rounded-xl"
+            >
+              Home
+            </Link>
+            <Link
+              href="/products"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="px-4 py-2.5 text-sm font-bold text-stone-900 hover:bg-stone-50 rounded-xl"
+            >
+              Shop All Gifts
+            </Link>
+            <Link
+              href="/bulk"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="px-4 py-2.5 text-sm font-bold text-[#FF5733] hover:bg-rose-50 rounded-xl flex items-center justify-between"
+            >
+              <span>Bulk / Corporate Orders</span>
+              <span className="px-2 py-0.5 rounded-full bg-[#FF5733] text-white text-[10px] font-black uppercase">
+                Wholesale
+              </span>
+            </Link>
+            <Link
+              href="/orders"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="px-4 py-2.5 text-sm font-bold text-stone-900 hover:bg-stone-50 rounded-xl"
+            >
+              Track Orders
+            </Link>
+            <Link
+              href="/profile"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="px-4 py-2.5 text-sm font-bold text-stone-900 hover:bg-stone-50 rounded-xl"
+            >
+              {user ? `Profile (${user.full_name || user.email})` : "Sign In / Profile"}
+            </Link>
+            <Link
+              href="/contact"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="px-4 py-2.5 text-sm font-bold text-stone-900 hover:bg-stone-50 rounded-xl"
+            >
+              Contact Us
+            </Link>
           </div>
         </div>
       )}

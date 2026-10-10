@@ -106,6 +106,55 @@ export default async function HomePage() {
         </section>
       </ScrollReveal>
 
+      {/* 7. Corporate & Wholesale Bulk Orders Banner */}
+      <ScrollReveal delay={0.1}>
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="rounded-3xl bg-gradient-to-r from-stone-900 via-stone-800 to-stone-900 text-white p-6 sm:p-10 border border-stone-800 relative overflow-hidden shadow-2xl">
+            <div className="absolute top-0 right-0 w-80 h-80 bg-[#FF5733]/15 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8">
+              <div className="space-y-3 text-center lg:text-left max-w-2xl">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FF5733]/20 border border-[#FF5733]/30 text-[#FF5733] text-[11px] font-extrabold uppercase tracking-wider">
+                  <span>🏢 B2B & Wholesale Division</span>
+                </span>
+                <h3 className="text-2xl sm:text-3xl font-black">
+                  Corporate Gifting & Bulk Orders for Retailers
+                </h3>
+                <p className="text-xs sm:text-sm text-stone-300 leading-relaxed">
+                  Looking for 25 to 5,000+ customized pieces? Enjoy tiered wholesale pricing, free digital 3D mockup proofs, custom laser engraving/printing, GST invoices, and pan-India doorstep dispatch.
+                </p>
+                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 text-[11px] text-stone-400 pt-1">
+                  <span>✓ MOQ from 25 units</span>
+                  <span>✓ Up to 45% wholesale discount</span>
+                  <span>✓ Multi-city employee dropshipping</span>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
+                <a
+                  href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919876543210"}?text=${encodeURIComponent(
+                    "Hello Distribute Happiness! I want a custom quote for a bulk corporate / retailer order."
+                  )}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg transition-all hover:scale-105"
+                >
+                  <span>Chat on WhatsApp</span>
+                </a>
+
+                <Link
+                  href="/bulk"
+                  className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-[#FF5733] hover:bg-[#e04826] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg transition-all hover:scale-105"
+                >
+                  <span>Explore Bulk Pricing</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      </ScrollReveal>
+
       {/* 8. Verified Customer Reviews */}
       <ScrollReveal delay={0.1}>
         <ReviewsSection />

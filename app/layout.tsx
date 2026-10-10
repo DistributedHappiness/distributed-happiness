@@ -9,9 +9,42 @@ import BottomNavbar from "@/components/BottomNavbar";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Distribute Happiness — Custom Gifts, Elevated.",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_WEBSITE_URL || "https://distributehappiness.com"),
+  title: {
+    default: "Distribute Happiness — Custom Gifts & Bulk Corporate Merchandise",
+    template: "%s | Distribute Happiness",
+  },
   description:
-    "Meticulously personalized gifts with real-time preview. Ceramic mugs, embroidered apparel, acoustic song plaques, and precision-crafted bespoke keepsakes.",
+    "Meticulously personalized gifts with real-time preview & corporate bulk merchandise. Custom ceramic mugs, engraved plaques, embroidered apparel, and executive gift hampers.",
+  keywords: [
+    "custom gifts",
+    "personalized gifts India",
+    "corporate gifting",
+    "bulk corporate gifts",
+    "custom mugs",
+    "engraved keychains",
+    "custom apparel",
+    "Distribute Happiness",
+  ],
+  authors: [{ name: "Distribute Happiness" }],
+  creator: "Distribute Happiness",
+  openGraph: {
+    type: "website",
+    locale: "en_IN",
+    url: "https://distributehappiness.com",
+    siteName: "Distribute Happiness",
+    title: "Distribute Happiness — Custom Gifts & Corporate Bulk Merchandise",
+    description: "Meticulously personalized gifts with real-time preview & corporate wholesale merchandise. Fast dispatch across India.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Distribute Happiness — Custom Gifts & Corporate Bulk Merchandise",
+    description: "Meticulously personalized gifts with real-time preview & corporate wholesale merchandise.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

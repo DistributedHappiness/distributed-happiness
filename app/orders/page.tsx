@@ -4,21 +4,61 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { Package, Truck, CheckCircle2, Clock, ArrowRight, Search, Sparkles } from "lucide-react";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+import { useAuth } from "@/lib/auth-context";
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [trackNumberInput, setTrackNumberInput] = useState("");
+  const { user } = useAuth();
 
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem("dh_user_orders");
-      if (saved) {
-        setOrders(JSON.parse(saved));
+    async function loadOrders() {
+      setIsLoading(true);
+      let allOrders: any[] = [];
+
+      // 1. Try Supabase for logged-in users
+      if (user?.id && isSupabaseConfigured()) {
+        try {
+          const { data } = await supabase
+            .from("orders")
+            .select("*, order_items(*)")
+            .eq("user_id", user.id)
+            .order("created_at", { ascending: false });
+          if (data && data.length > 0) {
+            allOrders = data.map((o) => ({ ...o, items: o.order_items }));
+          }
+        } catch (err) {
+          console.error("Error loading orders from Supabase:", err);
+        }
       }
-    } catch (e) {
-      console.error(e);
+
+      // 2. Also load from localStorage (catches guest orders + offline fallback)
+      try {
+        const saved = localStorage.getItem("dh_user_orders");
+        if (saved) {
+          const localOrders: any[] = JSON.parse(saved);
+          // Merge: add localStorage orders that aren't already in Supabase results
+          const existingNums = new Set(allOrders.map((o) => o.order_number));
+          for (const lo of localOrders) {
+            if (!existingNums.has(lo.order_number)) {
+              allOrders.push(lo);
+            }
+          }
+        }
+      } catch (_) {}
+
+      // Sort by created_at descending
+      allOrders.sort(
+        (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
+
+      setOrders(allOrders);
+      setIsLoading(false);
     }
-  }, []);
+    loadOrders();
+  }, [user]);
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
@@ -69,7 +109,25 @@ export default function OrdersPage() {
 
       {/* Orders List */}
       <div className="space-y-4">
-        {orders.length === 0 ? (
+        {isLoading ? (
+          <div className="space-y-4">
+            {[...Array(2)].map((_, i) => (
+              <div key={i} className="p-6 rounded-3xl bg-white dark:bg-neutral-800/60 border border-neutral-200/80 dark:border-neutral-700/80 space-y-4 animate-pulse">
+                <div className="flex justify-between">
+                  <div className="h-5 w-32 bg-neutral-200 dark:bg-neutral-700 rounded" />
+                  <div className="h-5 w-24 bg-neutral-200 dark:bg-neutral-700 rounded" />
+                </div>
+                <div className="flex gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-neutral-200 dark:bg-neutral-700" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-4 w-3/4 bg-neutral-200 dark:bg-neutral-700 rounded" />
+                    <div className="h-3 w-1/4 bg-neutral-200 dark:bg-neutral-700 rounded" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : orders.length === 0 ? (
           <div className="text-center py-16 bg-white dark:bg-neutral-800/40 rounded-3xl border border-neutral-200/80 dark:border-neutral-700/80 p-8 space-y-4">
             <Package className="w-12 h-12 mx-auto text-rose-400" />
             <h3 className="text-lg font-bold text-neutral-900 dark:text-white">
